@@ -8,7 +8,7 @@ export default async function TodoPage() {
     <div>
       <h1>Todo</h1>
       <ul>
-        {todos.map((todo) => (
+        {todos.map((todo: any) => (
           <li key={todo.id}>
             {todo.completed ? '✅' : '⬜️'} {todo.title}
           </li>

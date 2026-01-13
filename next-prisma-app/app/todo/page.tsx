@@ -1,17 +1,24 @@
-import { getTodos } from './actions';
+// app/todos/page.tsx
+import { prisma } from '@/lib/prisma';
+import { addTodo } from './actions';
 
-export default async function TodoPage() {
-  const userId = 1; // 仮ログイン
-  const todos = await getTodos(userId);
+export default async function Page() {
+  const todos = await prisma.todo.findMany({
+    where: { userId: 1 },
+  });
 
   return (
     <div>
-      <h1>Todo</h1>
+      <h1 className="text-2xl font-black">Todo</h1>
+
+      <form action={addTodo}>
+        <input type='text' name='title' placeholder='やることを書く' className="border h-10"/>
+        <button type='submit' className="ml-2 px-4 py-2 bg-blue-500 text-white rounded">追加</button>
+      </form>
+
       <ul>
-        {todos.map((todo: any) => (
-          <li key={todo.id}>
-            {todo.completed ? '✅' : '⬜️'} {todo.title}
-          </li>
+        {todos.map((todo: { id: number; title: string }) => (
+          <li key={todo.id}>{todo.title}</li>
         ))}
       </ul>
     </div>

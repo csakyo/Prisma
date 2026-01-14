@@ -5,6 +5,7 @@ import { addTodo } from './actions';
 export default async function Page() {
   const todos = await prisma.todo.findMany({
     where: { userId: 1 },
+    orderBy: { createdAt: 'desc' },
   });
 
   return (

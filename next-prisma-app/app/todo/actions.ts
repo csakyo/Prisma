@@ -1,7 +1,7 @@
-// app/todos/actions.ts
 'use server';
 
 import { prisma } from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
 
 export async function addTodo(formData: FormData) {
   const title = formData.get('title') as string;
@@ -14,4 +14,18 @@ export async function addTodo(formData: FormData) {
       userId: 1, // 仮ログイン
     },
   });
+}
+
+export async function toggleTodo(formData: FormData) {
+  console.log('🔥 toggleTodo called');
+  const id = Number(formData.get('id'));
+  const completed = formData.get('completed') === 'true';
+
+  await prisma.todo.update({
+    where: { id },
+    data: {
+      completed: !completed,
+    },
+  });
+  revalidatePath('/todos');
 }

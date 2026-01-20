@@ -1,4 +1,3 @@
-// app/todos/page.tsx
 import { prisma } from '@/lib/prisma';
 import { addTodo, toggleTodo } from './actions';
 

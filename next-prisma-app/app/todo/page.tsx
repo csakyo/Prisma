@@ -38,8 +38,16 @@ export default async function Page() {
               />
 
               <button type='submit' className='flex items-center gap-2'>
-                {/* 見た目用 */}
-                <input type='checkbox' checked={todo.completed} readOnly />
+                <input
+                  key={String(todo.completed)}
+                  type='checkbox'
+                  checked={todo.completed}
+                  readOnly
+                  tabIndex={-1}
+                  aria-hidden
+                  className='pointer-events-none'
+                />
+
                 <span
                   className={todo.completed ? 'line-through text-gray-400' : ''}
                 >

@@ -29,3 +29,15 @@ export async function toggleTodo(formData: FormData) {
   });
   revalidatePath('/todos');
 }
+
+export async function deleteTodo(formData: FormData) {
+  console.log('🗑 deleteTodo called');
+
+  const id = Number(formData.get('id'));
+
+  if (!id) return;
+
+  await prisma.todo.delete({
+    where: { id },
+  });
+}

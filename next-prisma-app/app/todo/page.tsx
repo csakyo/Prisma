@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { addTodo, toggleTodo } from './actions';
+import { addTodo, toggleTodo, deleteTodo } from './actions';
 
 export default async function Page() {
   const todos = await prisma.todo.findMany({
@@ -26,9 +26,10 @@ export default async function Page() {
         </button>
       </form>
 
-      <ul>
+      <ul className='mt-4 space-y-2'>
         {todos.map((todo) => (
           <li key={todo.id} className='flex items-center gap-2'>
+            {/* toggle */}
             <form action={toggleTodo}>
               <input type='hidden' name='id' value={todo.id} />
               <input
@@ -36,23 +37,23 @@ export default async function Page() {
                 name='completed'
                 value={String(todo.completed)}
               />
+              <button type='submit'>{todo.completed ? '☑' : '☐'}</button>
+            </form>
 
-              <button type='submit' className='flex items-center gap-2'>
-                <input
-                  key={String(todo.completed)}
-                  type='checkbox'
-                  checked={todo.completed}
-                  readOnly
-                  tabIndex={-1}
-                  aria-hidden
-                  className='pointer-events-none'
-                />
+            <span
+              className={todo.completed ? 'line-through text-gray-400' : ''}
+            >
+              {todo.title}
+            </span>
 
-                <span
-                  className={todo.completed ? 'line-through text-gray-400' : ''}
-                >
-                  {todo.title}
-                </span>
+            {/* delete */}
+            <form action={deleteTodo}>
+              <input type='hidden' name='id' value={todo.id} />
+              <button
+                type='submit'
+                className='text-red-500 hover:underline ml-2'
+              >
+                削除
               </button>
             </form>
           </li>

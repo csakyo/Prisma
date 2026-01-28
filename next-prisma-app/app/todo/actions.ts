@@ -17,7 +17,6 @@ export async function addTodo(formData: FormData) {
 }
 
 export async function toggleTodo(formData: FormData) {
-  console.log('🔥 toggleTodo called');
   const id = Number(formData.get('id'));
   const completed = formData.get('completed') === 'true';
 

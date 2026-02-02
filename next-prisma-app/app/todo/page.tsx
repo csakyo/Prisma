@@ -29,7 +29,6 @@ export default async function Page() {
       <ul className='mt-4 space-y-2'>
         {todos.map((todo) => (
           <li key={todo.id} className='flex items-center gap-2'>
-            {/* toggle */}
             <form action={toggleTodo}>
               <input type='hidden' name='id' value={todo.id} />
               <input

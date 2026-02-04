@@ -1,39 +1,30 @@
 'use client';
 
 import { useOptimistic } from 'react';
-import { toggleTodo } from './actions';
+import { deleteTodo } from './actions';
 
-type Todo = {
-  id: number;
-  title: string;
-  completed: boolean;
-};
+export function TodoItem({ todo }) {
+  const [optimisticTodo, removeOptimistic] = useOptimistic(
+    todo,
+    (_state, _action: void) => null,
+  );
 
-export function TodoItem({ todo }: { todo: Todo }) {
-  const [optimisticTodo, toggleOptimistic] = useOptimistic(todo, (state) => ({
-    ...state,
-    completed: !state.completed,
-  }));
+  if (!optimisticTodo) return null;
 
   return (
     <form
       action={async () => {
-        toggleOptimistic({ completed: !optimisticTodo.completed });
+        removeOptimistic();
+
         const formData = new FormData();
         formData.append('id', String(todo.id));
-        formData.append('completed', String(todo.completed));
-        await toggleTodo(formData);
+
+        await deleteTodo(formData);
       }}
     >
-      <button className='flex items-center gap-2'>
-        <input type='checkbox' checked={optimisticTodo.completed} readOnly />
-        <span
-          className={
-            optimisticTodo.completed ? 'line-through text-gray-400' : ''
-          }
-        >
-          {optimisticTodo.title}
-        </span>
+      <span>{todo.title}</span>
+      <button type='submit' className='text-red-500 text-sm'>
+        削除
       </button>
     </form>
   );

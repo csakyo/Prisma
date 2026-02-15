@@ -6,6 +6,8 @@ import { revalidatePath } from 'next/cache';
 export async function addTodo(formData: FormData) {
   const title = formData.get('title') as string;
 
+  // throw new Error('DBエラー（実験用）');
+
   if (!title) return;
 
   await prisma.todo.create({
@@ -14,6 +16,7 @@ export async function addTodo(formData: FormData) {
       userId: 1, // 仮ログイン
     },
   });
+  revalidatePath('/todos');
 }
 
 export async function toggleTodo(formData: FormData) {

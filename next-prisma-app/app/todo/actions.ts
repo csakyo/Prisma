@@ -42,4 +42,5 @@ export async function deleteTodo(formData: FormData) {
   await prisma.todo.delete({
     where: { id },
   });
+  revalidatePath('/todos');
 }

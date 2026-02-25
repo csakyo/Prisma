@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { addTodo, toggleTodo } from './actions';
+import { addTodo, toggleTodo, deleteTodo } from './actions';
 
 export default async function Page() {
   const todos = await prisma.todo.findMany({
@@ -28,7 +28,7 @@ export default async function Page() {
 
       <ul>
         {todos.map((todo) => (
-          <li key={todo.id} className='flex items-center gap-2'>
+          <li key={todo.id} className='flex items-center gap-2 p-3 '>
             <form action={toggleTodo}>
               <input type='hidden' name='id' value={todo.id} />
               <input
@@ -53,6 +53,15 @@ export default async function Page() {
                 >
                   {todo.title}
                 </span>
+              </button>
+            </form>
+            <form action={deleteTodo}>
+              <input type='hidden' name='id' value={todo.id} />
+              <button
+                type='submit'
+                className='ml-2 px-2 bg-red-500 text-white rounded text-sm'
+              >
+                削除
               </button>
             </form>
           </li>

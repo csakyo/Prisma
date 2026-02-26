@@ -59,7 +59,7 @@ export default async function Page() {
               <input type='hidden' name='id' value={todo.id} />
               <button
                 type='submit'
-                className='ml-2 px-2 bg-red-500 text-white rounded text-sm'
+                className='ml-2 px-2 bg-red-500 text-black rounded text-sm'
               >
                 削除
               </button>

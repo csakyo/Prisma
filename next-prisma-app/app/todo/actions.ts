@@ -6,8 +6,6 @@ import { revalidatePath } from 'next/cache';
 export async function addTodo(formData: FormData) {
   const title = formData.get('title') as string;
 
-  // throw new Error('DBエラー（実験用）');
-
   if (!title) return;
 
   await prisma.todo.create({
@@ -16,31 +14,20 @@ export async function addTodo(formData: FormData) {
       userId: 1, // 仮ログイン
     },
   });
-  revalidatePath('/todos');
+  // revalidatePath('/todos');
 }
 
-export async function toggleTodo(formData: FormData) {
-  const id = Number(formData.get('id'));
-  const completed = formData.get('completed') === 'true';
-
+export async function toggleTodo(id: number, nextCompleted: boolean) {
   await prisma.todo.update({
     where: { id },
     data: {
-      completed: !completed,
+      completed: nextCompleted,
     },
   });
-  revalidatePath('/todos');
 }
 
-export async function deleteTodo(formData: FormData) {
-  console.log('🗑 deleteTodo called');
-
-  const id = Number(formData.get('id'));
-
-  if (!id) return;
-
+export async function deleteTodo(id: number) {
   await prisma.todo.delete({
     where: { id },
   });
-  revalidatePath('/todos');
 }

@@ -1,7 +1,5 @@
-export const dynamic = 'force-dynamic';
-
 import { prisma } from '@/lib/prisma';
-import { addTodo, toggleTodo, deleteTodo } from './actions';
+import { TodoList } from './TodoList';
 
 export default async function Page() {
   const todos = await prisma.todo.findMany({
@@ -12,63 +10,7 @@ export default async function Page() {
   return (
     <div>
       <h1 className='text-2xl font-black'>Todo</h1>
-
-      <form action={addTodo}>
-        <input
-          type='text'
-          name='title'
-          placeholder='やることを書く'
-          className='border h-10'
-        />
-        <button
-          type='submit'
-          className='ml-2 px-4 py-2 bg-blue-500 text-white rounded'
-        >
-          追加
-        </button>
-      </form>
-
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id} className='flex items-center gap-2 p-3 '>
-            <form action={toggleTodo}>
-              <input type='hidden' name='id' value={todo.id} />
-              <input
-                type='hidden'
-                name='completed'
-                value={String(todo.completed)}
-              />
-
-              <button type='submit' className='flex items-center gap-2'>
-                <input
-                  key={String(todo.completed)}
-                  type='checkbox'
-                  checked={todo.completed}
-                  readOnly
-                  tabIndex={-1}
-                  aria-hidden
-                  className='pointer-events-none'
-                />
-
-                <span
-                  className={todo.completed ? 'line-through text-gray-400' : ''}
-                >
-                  {todo.title}
-                </span>
-              </button>
-            </form>
-            <form action={deleteTodo}>
-              <input type='hidden' name='id' value={todo.id} />
-              <button
-                type='submit'
-                className='ml-2 px-2 bg-white-500 text-black rounded text-sm border-solid border-2 border-gray-300 hover:bg-gray-100'
-              >
-                削除
-              </button>
-            </form>
-          </li>
-        ))}
-      </ul>
+      <TodoList todos={todos} />
     </div>
   );
 }

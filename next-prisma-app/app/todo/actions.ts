@@ -14,7 +14,7 @@ export async function addTodo(formData: FormData) {
       userId: 1, // 仮ログイン
     },
   });
-  // revalidatePath('/todos');
+  revalidatePath('/todos');
 }
 
 export async function toggleTodo(id: number, nextCompleted: boolean) {

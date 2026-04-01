@@ -6,8 +6,10 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // DBとの接続
   adapter: PrismaAdapter(prisma),
 
+  // 認証方法の設定
   providers: [
     Credentials({
       name: 'credentials',
@@ -15,6 +17,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: {},
         password: {},
       },
+      // 認証のロジック
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null;
@@ -48,6 +51,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async session({ session, token }) {
       if (session.user) {
+        // JWTからユーザーIDをセッションに追加
         session.user.id = token.sub as string;
       }
       return session;

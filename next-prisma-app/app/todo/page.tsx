@@ -1,10 +1,18 @@
 import { prisma } from '@/lib/prisma';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 import { TodoList } from './TodoList';
 import { addTodo } from './actions';
 
 export default async function Page() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect('/login');
+  }
+
   const todos = await prisma.todo.findMany({
-    where: { userId: 1 },
+    where: { userId: parseInt(session.user.id) },
     orderBy: { createdAt: 'desc' },
   });
 

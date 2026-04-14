@@ -1,9 +1,16 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
+import { auth } from '@/auth';
 import { revalidatePath } from 'next/cache';
 
 export async function addTodo(formData: FormData) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    throw new Error('Unauthorized');
+  }
+
   const title = formData.get('title') as string;
 
   if (!title) return;
@@ -11,10 +18,10 @@ export async function addTodo(formData: FormData) {
   await prisma.todo.create({
     data: {
       title,
-      userId: 1, // 仮ログイン
+      userId: parseInt(session.user.id),
     },
   });
-  revalidatePath('/todos');
+  revalidatePath('/todo');
 }
 
 export async function toggleTodo(id: number, nextCompleted: boolean) {

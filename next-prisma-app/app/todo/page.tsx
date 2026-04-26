@@ -5,6 +5,8 @@ import { TodoContainer } from './TodoContainer';
 
 export default async function Page() {
   const session = await auth();
+  console.log('session', session);
+  console.log('session.user.id', session?.user?.id);
 
   if (!session?.user?.id) {
     redirect('/login');

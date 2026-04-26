@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { TodoList } from './TodoList';
 import { addTodo } from './actions';
+import { useRouter } from 'next/navigation';
 
 type Todo = {
   id: number;
@@ -19,6 +20,7 @@ type Props = {
 export function TodoContainer({ initialTodos }: Props) {
   const [todos, setTodos] = useState<Todo[]>(initialTodos);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleAddTodo = async (formData: FormData) => {
     setError(null);
@@ -43,6 +45,7 @@ export function TodoContainer({ initialTodos }: Props) {
     try {
       // サーバーアクションを実行
       await addTodo(formData);
+      router.refresh(); // ← これ
 
       // フォームをリセット
       const form = document.querySelector('form') as HTMLFormElement;

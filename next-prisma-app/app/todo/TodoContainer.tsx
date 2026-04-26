@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { TodoList } from './TodoList';
 import { addTodo } from './actions';
-import { useRouter } from 'next/navigation';
 
 type Todo = {
   id: number;
@@ -20,7 +19,6 @@ type Props = {
 export function TodoContainer({ initialTodos }: Props) {
   const [todos, setTodos] = useState<Todo[]>(initialTodos);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   const handleAddTodo = async (formData: FormData) => {
     setError(null);
@@ -43,9 +41,13 @@ export function TodoContainer({ initialTodos }: Props) {
     setTodos((prev) => [optimisticTodo, ...prev]);
 
     try {
-      // サーバーアクションを実行
-      await addTodo(formData);
-      router.refresh(); // ← これ
+      // サーバーアクションを実行して実際のTodoを取得
+      const newTodo = await addTodo(formData);
+
+      // 仮のTodoを実際のTodoに置き換え
+      setTodos((prev) =>
+        prev.map((todo) => (todo.id === optimisticTodo.id ? newTodo : todo)),
+      );
 
       // フォームをリセット
       const form = document.querySelector('form') as HTMLFormElement;

@@ -17,7 +17,7 @@ export async function addTodo(formData: FormData) {
     throw new Error('Title is required');
   }
 
-  await prisma.todo.create({
+  const newTodo = await prisma.todo.create({
     data: {
       title: title.trim(),
       userId: parseInt(session.user.id),
@@ -25,6 +25,9 @@ export async function addTodo(formData: FormData) {
   });
 
   revalidatePath('/todo');
+
+  // 作成されたTodoを返す
+  return newTodo;
 }
 
 export async function toggleTodo(id: number, nextCompleted: boolean) {

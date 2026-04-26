@@ -13,14 +13,17 @@ export async function addTodo(formData: FormData) {
 
   const title = formData.get('title') as string;
 
-  if (!title) return;
+  if (!title?.trim()) {
+    throw new Error('Title is required');
+  }
 
   await prisma.todo.create({
     data: {
-      title,
+      title: title.trim(),
       userId: parseInt(session.user.id),
     },
   });
+
   revalidatePath('/todo');
 }
 

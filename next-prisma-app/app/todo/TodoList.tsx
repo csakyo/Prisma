@@ -1,25 +1,35 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import { toggleTodo, deleteTodo } from './actions';
 
-export function TodoList({ todos }: any) {
-  const [isPending, startTransition] = useTransition();
+type Todo = {
+  id: number;
+  title: string;
+  completed: boolean;
+  createdAt: Date;
+  userId: number;
+};
 
-  // 🔥 useStateにする
-  const [localTodos, setLocalTodos] = useState(todos);
+type Props = {
+  todos: Todo[];
+  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+};
+
+export function TodoList({ todos, setTodos }: Props) {
+  const [isPending, startTransition] = useTransition();
 
   return (
     <ul>
-      {localTodos.map((todo: any) => (
+      {todos.map((todo) => (
         <li key={todo.id} className='flex items-center gap-2 p-3'>
           {/* チェック */}
           <button
             onClick={() => {
               startTransition(() => {
                 // ① UI更新（完全にローカル）
-                setLocalTodos((prev: any) =>
-                  prev.map((t: any) =>
+                setTodos((prev) =>
+                  prev.map((t) =>
                     t.id === todo.id ? { ...t, completed: !t.completed } : t,
                   ),
                 );
@@ -41,9 +51,7 @@ export function TodoList({ todos }: any) {
           <button
             onClick={() => {
               startTransition(() => {
-                setLocalTodos((prev: any) =>
-                  prev.filter((t: any) => t.id !== todo.id),
-                );
+                setTodos((prev) => prev.filter((t) => t.id !== todo.id));
 
                 deleteTodo(todo.id);
               });

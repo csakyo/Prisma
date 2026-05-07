@@ -14,7 +14,7 @@ export async function addTodo(formData: FormData) {
       userId: 1, // 仮ログイン
     },
   });
-  revalidatePath('/todos');
+  revalidatePath('/todo');
 }
 
 export async function toggleTodo(id: number, nextCompleted: boolean) {
@@ -24,10 +24,12 @@ export async function toggleTodo(id: number, nextCompleted: boolean) {
       completed: nextCompleted,
     },
   });
+  revalidatePath('/todo');
 }
 
 export async function deleteTodo(id: number) {
   await prisma.todo.delete({
     where: { id },
   });
+  revalidatePath('/todo');
 }
